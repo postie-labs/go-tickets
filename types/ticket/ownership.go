@@ -10,7 +10,7 @@ type Ownership struct {
 	// metadata
 	Hash            types.Hash
 	ProtocolVersion OwnershipProtocolVersion
-	Signature       types.Signature // signature of owners
+	Signatures      []types.Signature // signature of owners
 
 	// data
 	Timestamp  types.Timestamp
@@ -22,7 +22,7 @@ func NewOwnership(protocolVersion OwnershipProtocolVersion, ticketHash types.Has
 	return &Ownership{
 		Hash:            types.Hash{},
 		ProtocolVersion: protocolVersion,
-		Signature:       nil,
+		Signatures:      make([]types.Signature, 0),
 
 		Timestamp:  types.TimestampNow(),
 		TicketHash: ticketHash,
@@ -52,8 +52,8 @@ func (o *Ownership) GetProtocolVersion() OwnershipProtocolVersion {
 	return o.ProtocolVersion
 }
 
-func (o *Ownership) GetSignature() types.Signature {
-	return o.Signature
+func (o *Ownership) GetSignatures() []types.Signature {
+	return o.Signatures
 }
 
 func (o *Ownership) GetTimestamp() types.Timestamp {

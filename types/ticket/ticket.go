@@ -30,7 +30,7 @@ func NewTicket(protocolVersion TicketProtocolVersion, issuer types.Address, tick
 	return &Ticket{
 		Hash:            types.Hash{},
 		ProtocolVersion: protocolVersion,
-		Signature:       nil,
+		Signature:       make(types.Signature, 0),
 
 		Timestamp: types.TimestampNow(),
 		Issuer:    issuer,
