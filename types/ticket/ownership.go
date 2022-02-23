@@ -17,3 +17,53 @@ type Ownership struct {
 	TicketHash types.Hash
 	Owners     []types.Address
 }
+
+func NewOwnership(protocolVersion OwnershipProtocolVersion, ticketHash types.Hash, owners []types.Address) *Ownership {
+	return &Ownership{
+		Hash:            types.Hash{},
+		ProtocolVersion: protocolVersion,
+		Signature:       nil,
+
+		Timestamp:  types.TimestampNow(),
+		TicketHash: ticketHash,
+		Owners:     owners,
+	}
+}
+
+// ops
+func (o *Ownership) GenerateHash() error {
+	return nil
+}
+
+func (o *Ownership) Sign() error {
+	return nil
+}
+
+func (o *Ownership) Verify() error {
+	return nil
+}
+
+// accessors
+func (o *Ownership) GetHash() types.Hash {
+	return o.Hash
+}
+
+func (o *Ownership) GetProtocolVersion() OwnershipProtocolVersion {
+	return o.ProtocolVersion
+}
+
+func (o *Ownership) GetSignature() types.Signature {
+	return o.Signature
+}
+
+func (o *Ownership) GetTimestamp() types.Timestamp {
+	return o.Timestamp
+}
+
+func (o *Ownership) GetTicketHash() types.Hash {
+	return o.TicketHash
+}
+
+func (o *Ownership) GetOwners() []types.Address {
+	return o.Owners
+}
