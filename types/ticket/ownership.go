@@ -1,6 +1,7 @@
 package ticket
 
 import (
+	crypto "github.com/postie-labs/go-crypto-lib"
 	"github.com/postie-labs/go-tickets/types"
 )
 
@@ -15,10 +16,10 @@ type Ownership struct {
 	// data
 	Timestamp  types.Timestamp
 	TicketHash types.Hash
-	Owners     []types.Address
+	Owners     []crypto.Addr
 }
 
-func NewOwnership(protocolVersion OwnershipProtocolVersion, ticketHash types.Hash, owners []types.Address) *Ownership {
+func NewOwnership(protocolVersion OwnershipProtocolVersion, ticketHash types.Hash, owners []crypto.Addr) *Ownership {
 	return &Ownership{
 		Hash:            types.Hash{},
 		ProtocolVersion: protocolVersion,
@@ -64,6 +65,6 @@ func (o *Ownership) GetTicketHash() types.Hash {
 	return o.TicketHash
 }
 
-func (o *Ownership) GetOwners() []types.Address {
+func (o *Ownership) GetOwners() []crypto.Addr {
 	return o.Owners
 }

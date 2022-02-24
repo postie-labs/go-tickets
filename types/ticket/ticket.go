@@ -1,6 +1,7 @@
 package ticket
 
 import (
+	crypto "github.com/postie-labs/go-crypto-lib"
 	"github.com/postie-labs/go-tickets/types"
 )
 
@@ -21,12 +22,12 @@ type Ticket struct {
 
 	// data
 	Timestamp types.Timestamp
-	Issuer    types.Address
+	Issuer    crypto.Addr
 	Type      TicketType
 	Data      types.Data
 }
 
-func NewTicket(protocolVersion TicketProtocolVersion, issuer types.Address, ticketType TicketType, data types.Data) *Ticket {
+func NewTicket(protocolVersion TicketProtocolVersion, issuer crypto.Addr, ticketType TicketType, data types.Data) *Ticket {
 	return &Ticket{
 		Hash:            types.Hash{},
 		ProtocolVersion: protocolVersion,
@@ -69,7 +70,7 @@ func (t *Ticket) GetTimestamp() types.Timestamp {
 	return t.Timestamp
 }
 
-func (t *Ticket) GetIssuer() types.Address {
+func (t *Ticket) GetIssuer() crypto.Addr {
 	return t.Issuer
 }
 
