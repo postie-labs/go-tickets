@@ -37,10 +37,6 @@ func (tb *TicketBody) encode() ([]byte, error) {
 	return json.Marshal(tb)
 }
 
-func (tb *TicketBody) decode(data []byte) error {
-	return json.Unmarshal(data, tb)
-}
-
 func NewTicket(protocolVersion TicketProtocolVersion, issuer crypto.Addr, ticketType TicketType, data types.Data) (*Ticket, error) {
 	body := TicketBody{
 		Timestamp: types.TimestampNow(),
@@ -61,7 +57,24 @@ func NewTicket(protocolVersion TicketProtocolVersion, issuer crypto.Addr, ticket
 	}, err
 }
 
+func NewTicketFromBytes(data []byte) (*Ticket, error) {
+	ticket := Ticket{}
+	err := ticket.Decode(data)
+	if err != nil {
+		return nil, err
+	}
+	return &ticket, nil
+}
+
 // ops
+func (t *Ticket) Encode() ([]byte, error) {
+	return json.Marshal(t)
+}
+
+func (t *Ticket) Decode(data []byte) error {
+	return json.Unmarshal(data, t)
+}
+
 func (t *Ticket) Sign(privKey *crypto.PrivKey) error {
 	sigBytes, err := privKey.Sign(t.EncodedBody)
 	if err != nil {
