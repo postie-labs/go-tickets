@@ -20,7 +20,7 @@ type TicketProtocolVersion uint16
 type Ticket struct {
 	Hash            types.Hash            `json:"hash"`
 	ProtocolVersion TicketProtocolVersion `json:"protocol_version"`
-	Signature       types.Signature       `json:"siguature"`
+	Signature       Signature             `json:"siguature"`
 	Body            TicketBody            `json:"body"`
 	EncodedBody     []byte                `json:"-"`
 }
@@ -54,7 +54,7 @@ func NewTicket(protocolVersion TicketProtocolVersion, issuer crypto.Addr, ticket
 	return &Ticket{
 		Hash:            util.ToSHA256(encodedBody),
 		ProtocolVersion: protocolVersion,
-		Signature:       make(types.Signature, 0),
+		Signature:       Signature{},
 		Body:            body,
 		EncodedBody:     encodedBody,
 	}, err
@@ -78,7 +78,7 @@ func (t *Ticket) GetProtocolVersion() TicketProtocolVersion {
 	return t.ProtocolVersion
 }
 
-func (t *Ticket) GetSignature() types.Signature {
+func (t *Ticket) GetSignature() Signature {
 	return t.Signature
 }
 
