@@ -9,5 +9,5 @@ type (
 )
 
 func TimestampNow() Timestamp {
-	return time.Now()
+	return time.Now().Round(0) // remove milliseconds
 }

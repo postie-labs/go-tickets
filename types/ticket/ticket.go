@@ -63,6 +63,11 @@ func NewTicketFromBytes(data []byte) (*Ticket, error) {
 	if err != nil {
 		return nil, err
 	}
+	encodedBody, err := ticket.Body.encode()
+	if err != nil {
+		return nil, err
+	}
+	ticket.EncodedBody = encodedBody
 	return &ticket, nil
 }
 
@@ -95,7 +100,7 @@ func (t *Ticket) Verify() (bool, error) {
 	if signature.Bytes == nil {
 		return false, fmt.Errorf("Ticket.Signature.Bytes is nil")
 	}
-	return signature.PubKey.Verify(t.Body.Data, signature.Bytes), nil
+	return signature.PubKey.Verify(t.EncodedBody, signature.Bytes), nil
 }
 
 // accessors
