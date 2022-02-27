@@ -22,8 +22,9 @@ type Ticket struct {
 	Hash            types.Hash            `json:"hash"`
 	ProtocolVersion TicketProtocolVersion `json:"protocol_version"`
 	Signature       Signature             `json:"siguature"`
-	Body            TicketBody            `json:"body"`
-	EncodedBody     []byte                `json:"-"`
+
+	Body        TicketBody `json:"body"`
+	encodedBody []byte     `json:"-"`
 }
 
 type TicketBody struct {
@@ -52,8 +53,9 @@ func NewTicket(protocolVersion TicketProtocolVersion, issuer crypto.Addr, ticket
 		Hash:            util.ToSHA256(encodedBody),
 		ProtocolVersion: protocolVersion,
 		Signature:       Signature{},
-		Body:            body,
-		EncodedBody:     encodedBody,
+
+		Body:        body,
+		encodedBody: encodedBody,
 	}, err
 }
 
@@ -67,7 +69,7 @@ func NewTicketFromBytes(data []byte) (*Ticket, error) {
 	if err != nil {
 		return nil, err
 	}
-	ticket.EncodedBody = encodedBody
+	ticket.encodedBody = encodedBody
 	return &ticket, nil
 }
 
@@ -81,7 +83,7 @@ func (t *Ticket) Decode(data []byte) error {
 }
 
 func (t *Ticket) Sign(privKey *crypto.PrivKey) error {
-	sigBytes, err := privKey.Sign(t.EncodedBody)
+	sigBytes, err := privKey.Sign(t.encodedBody)
 	if err != nil {
 		return err
 	}
@@ -100,7 +102,7 @@ func (t *Ticket) Verify() (bool, error) {
 	if signature.Bytes == nil {
 		return false, fmt.Errorf("Ticket.Signature.Bytes is nil")
 	}
-	return signature.PubKey.Verify(t.EncodedBody, signature.Bytes), nil
+	return signature.PubKey.Verify(t.encodedBody, signature.Bytes), nil
 }
 
 // accessors
