@@ -2,6 +2,7 @@ package ticket
 
 import (
 	"encoding/json"
+	"fmt"
 
 	crypto "github.com/postie-labs/go-crypto-lib"
 	"github.com/postie-labs/go-tickets/types"
@@ -71,16 +72,27 @@ func (o *Ownership) Decode(data []byte) error {
 	return json.Unmarshal(data, o)
 }
 
-func (o *Ownership) GenerateHash() error {
+func (o *Ownership) Sign(privKey *crypto.PrivKey) error {
+	sigBytes, err := privKey.Sign(o.encodedBody)
+	if err != nil {
+		return err
+	}
+	o.Signature = Signature{
+		PubKey: privKey.PubKey(),
+		Bytes:  sigBytes,
+	}
 	return nil
 }
 
-func (o *Ownership) Sign() error {
-	return nil
-}
-
-func (o *Ownership) Verify() error {
-	return nil
+func (o *Ownership) Verify() (bool, error) {
+	signature := o.Signature
+	if signature.PubKey == nil {
+		return false, fmt.Errorf("Ticket.Signature.PubKey is nil")
+	}
+	if signature.Bytes == nil {
+		return false, fmt.Errorf("Ticket.Signature.Bytes is nil")
+	}
+	return signature.PubKey.Verify(o.encodedBody, signature.Bytes), nil
 }
 
 // accessors
