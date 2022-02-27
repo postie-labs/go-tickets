@@ -1,6 +1,10 @@
 package app
 
-import "context"
+import (
+	"context"
+
+	"github.com/postie-labs/go-postie-lib/crypto"
+)
 
 type Application struct {
 	ctx   context.Context
@@ -19,7 +23,8 @@ func NewApplication() (*Application, error) {
 }
 
 // ops
-func (app *Application) Issue() error {
+func (app *Application) Issue(privKey crypto.PrivKey) error {
+
 	return nil
 }
 

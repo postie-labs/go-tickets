@@ -3,7 +3,7 @@ package ticket
 import (
 	"testing"
 
-	"github.com/postie-labs/go-crypto-lib"
+	"github.com/postie-labs/go-postie-lib/crypto"
 	"github.com/stretchr/testify/assert"
 )
 

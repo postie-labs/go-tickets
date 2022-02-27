@@ -3,7 +3,7 @@ module github.com/postie-labs/go-tickets
 go 1.17
 
 require (
-	github.com/postie-labs/go-crypto-lib v0.0.0-20220223230848-be65b0cf6eef
+	github.com/postie-labs/go-postie-lib v0.0.0-20220227235013-99c8cd331c17
 	github.com/stretchr/testify v1.7.0
 )
 

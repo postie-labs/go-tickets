@@ -1,6 +1,8 @@
 package ticket
 
-import "github.com/postie-labs/go-crypto-lib"
+import (
+	"github.com/postie-labs/go-postie-lib/crypto"
+)
 
 type Signature struct {
 	PubKey *crypto.PubKey `json:"pub_key"`

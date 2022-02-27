@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	crypto "github.com/postie-labs/go-crypto-lib"
+	"github.com/postie-labs/go-postie-lib/crypto"
 	"github.com/postie-labs/go-tickets/types"
 	"github.com/postie-labs/go-tickets/util"
 )
