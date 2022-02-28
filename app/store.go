@@ -6,30 +6,30 @@ import (
 )
 
 type Store struct {
-	tickets    map[types.Hash]ticket.Ticket
-	ownerships map[types.Hash]ticket.Ownership
+	tickets    map[types.Hash]*ticket.Ticket
+	ownerships map[types.Hash]*ticket.Ownership
 }
 
 func NewStore() (*Store, error) {
 	return &Store{
-		tickets:    make(map[types.Hash]ticket.Ticket),
-		ownerships: make(map[types.Hash]ticket.Ownership),
+		tickets:    make(map[types.Hash]*ticket.Ticket),
+		ownerships: make(map[types.Hash]*ticket.Ownership),
 	}, nil
 }
 
 // accessors
-func (s *Store) GetTicket(hash types.Hash) ticket.Ticket {
+func (s *Store) GetTicket(hash types.Hash) *ticket.Ticket {
 	return s.tickets[hash]
 }
 
-func (s *Store) SetTicket(hash types.Hash, tck ticket.Ticket) {
+func (s *Store) SetTicket(hash types.Hash, tck *ticket.Ticket) {
 	s.tickets[hash] = tck
 }
 
-func (s *Store) GetOwnership(hash types.Hash) ticket.Ownership {
+func (s *Store) GetOwnership(hash types.Hash) *ticket.Ownership {
 	return s.ownerships[hash]
 }
 
-func (s *Store) SetOwnership(hash types.Hash, ows ticket.Ownership) {
+func (s *Store) SetOwnership(hash types.Hash, ows *ticket.Ownership) {
 	s.ownerships[hash] = ows
 }
