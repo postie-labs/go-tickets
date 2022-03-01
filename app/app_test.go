@@ -39,4 +39,13 @@ func TestApplication(t *testing.T) {
 
 	owner = app.store.GetOwnership(tckHash)
 	assert.True(t, bobAddr.Equals(owner))
+
+	// VERIFY
+	verified, err := app.Verify(aliceAddr, tckHash)
+	assert.Error(t, err)
+	assert.False(t, verified)
+
+	verified, err = app.Verify(bobAddr, tckHash)
+	assert.NoError(t, err)
+	assert.True(t, verified)
 }
