@@ -1,4 +1,4 @@
-package ticket
+package blockchain
 
 import (
 	"github.com/postie-labs/go-postie-lib/crypto"

@@ -17,9 +17,6 @@ const (
 type Application struct {
 	ctx   context.Context
 	store *Store
-
-	ticketProtocolVersion    ticket.TicketProtocolVersion
-	ownershipProtocolVersion ticket.OwnershipProtocolVersion
 }
 
 func NewApplication() (*Application, error) {
@@ -30,9 +27,6 @@ func NewApplication() (*Application, error) {
 	return &Application{
 		ctx:   context.Background(),
 		store: store,
-
-		ticketProtocolVersion:    DefaultTicketProtocolVersion,
-		ownershipProtocolVersion: DefaultOwnershipProtocolVersion,
 	}, nil
 }
 
@@ -41,25 +35,22 @@ func NewApplication() (*Application, error) {
 // subject: issuer
 func (app *Application) Issue(issuer *crypto.PrivKey, data []byte) (types.Hash, error) {
 	// generate and sign a new ticket
-	tck, err := ticket.NewTicket(
-		app.ticketProtocolVersion,
+	tck := ticket.NewTicket(
 		issuer.PubKey().Address(),
 		ticket.TicketTypeSingleOwner,
 		data,
 	)
-	if err != nil {
-		return types.EmptyHash, err
-	}
-	err = tck.Sign(issuer)
+
+	tckHash, err := tck.Hash()
 	if err != nil {
 		return types.EmptyHash, err
 	}
 
 	// store
-	app.store.SetTicket(tck.Hash, tck)
-	app.store.SetOwnership(tck.Hash, issuer.PubKey().Address())
+	app.store.SetTicket(tckHash, tck)
+	app.store.SetOwnership(tckHash, issuer.PubKey().Address())
 
-	return tck.Hash, nil
+	return tckHash, nil
 }
 
 // subject: owner

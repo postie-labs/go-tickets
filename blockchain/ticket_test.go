@@ -1,4 +1,4 @@
-package ticket
+package blockchain
 
 import (
 	"testing"
@@ -13,8 +13,15 @@ func TestTicket(t *testing.T) {
 	issuerPubKey := issuerPrivKey.PubKey()
 	issuerAddr := issuerPubKey.Address()
 
-	data := []byte("hello world")
-	ticketA := NewTicket(issuerAddr, TicketTypeSingleOwner, data)
+	ticketA, err := NewTicket(1, issuerAddr, TicketTypeSingleOwner, []byte("hello world"))
+	assert.Nil(t, err)
+
+	err = ticketA.Sign(issuerPrivKey)
+	assert.Nil(t, err)
+
+	verified, err := ticketA.Verify()
+	assert.Nil(t, err)
+	assert.True(t, verified)
 
 	ticketABytes, err := ticketA.Encode()
 	assert.Nil(t, err)
@@ -28,4 +35,8 @@ func TestTicket(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.EqualValues(t, ticketABytes, ticketBBytes)
+
+	verified, err = ticketB.Verify()
+	assert.Nil(t, err)
+	assert.True(t, verified)
 }

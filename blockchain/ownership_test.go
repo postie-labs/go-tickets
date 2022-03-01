@@ -1,4 +1,4 @@
-package ticket
+package blockchain
 
 import (
 	"encoding/hex"

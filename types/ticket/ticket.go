@@ -2,7 +2,6 @@ package ticket
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/postie-labs/go-postie-lib/crypto"
 	"github.com/postie-labs/go-tickets/types"
@@ -16,47 +15,20 @@ const (
 	TicketTypeMultiOwner
 )
 
-type TicketProtocolVersion uint16
-
 type Ticket struct {
-	Hash            types.Hash            `json:"hash"`
-	ProtocolVersion TicketProtocolVersion `json:"protocol_version"`
-	Signature       Signature             `json:"siguature"`
-
-	Body        TicketBody `json:"body"`
-	encodedBody []byte     `json:"-"`
-}
-
-type TicketBody struct {
 	Timestamp types.Timestamp `json:"timestamp"`
 	Issuer    crypto.Addr     `json:"issuer"`
 	Type      TicketType      `json:"type"`
 	Data      types.Data      `json:"data"`
 }
 
-func (tb *TicketBody) encode() ([]byte, error) {
-	return json.Marshal(tb)
-}
-
-func NewTicket(protocolVersion TicketProtocolVersion, issuer crypto.Addr, ticketType TicketType, data types.Data) (*Ticket, error) {
-	body := TicketBody{
+func NewTicket(issuer crypto.Addr, tckType TicketType, data types.Data) *Ticket {
+	return &Ticket{
 		Timestamp: types.TimestampNow(),
 		Issuer:    issuer,
-		Type:      ticketType,
+		Type:      tckType,
 		Data:      data,
 	}
-	encodedBody, err := body.encode()
-	if err != nil {
-		return nil, err
-	}
-	return &Ticket{
-		Hash:            util.ToSHA256(encodedBody),
-		ProtocolVersion: protocolVersion,
-		Signature:       Signature{},
-
-		Body:        body,
-		encodedBody: encodedBody,
-	}, err
 }
 
 func NewTicketFromBytes(data []byte) (*Ticket, error) {
@@ -65,11 +37,6 @@ func NewTicketFromBytes(data []byte) (*Ticket, error) {
 	if err != nil {
 		return nil, err
 	}
-	encodedBody, err := ticket.Body.encode()
-	if err != nil {
-		return nil, err
-	}
-	ticket.encodedBody = encodedBody
 	return &ticket, nil
 }
 
@@ -82,54 +49,27 @@ func (t *Ticket) Decode(data []byte) error {
 	return json.Unmarshal(data, t)
 }
 
-func (t *Ticket) Sign(privKey *crypto.PrivKey) error {
-	sigBytes, err := privKey.Sign(t.encodedBody)
+func (t *Ticket) Hash() (types.Hash, error) {
+	data, err := t.Encode()
 	if err != nil {
-		return err
+		return types.EmptyHash, err
 	}
-	t.Signature = Signature{
-		PubKey: privKey.PubKey(),
-		Bytes:  sigBytes,
-	}
-	return nil
-}
-
-func (t *Ticket) Verify() (bool, error) {
-	signature := t.Signature
-	if signature.PubKey == nil {
-		return false, fmt.Errorf("Ticket.Signature.PubKey is nil")
-	}
-	if signature.Bytes == nil {
-		return false, fmt.Errorf("Ticket.Signature.Bytes is nil")
-	}
-	return signature.PubKey.Verify(t.encodedBody, signature.Bytes), nil
+	return util.ToSHA256(data), nil
 }
 
 // accessors
-func (t *Ticket) GetHash() types.Hash {
-	return t.Hash
-}
-
-func (t *Ticket) GetProtocolVersion() TicketProtocolVersion {
-	return t.ProtocolVersion
-}
-
-func (t *Ticket) GetSignature() Signature {
-	return t.Signature
-}
-
 func (t *Ticket) GetTimestamp() types.Timestamp {
-	return t.Body.Timestamp
+	return t.Timestamp
 }
 
 func (t *Ticket) GetIssuer() crypto.Addr {
-	return t.Body.Issuer
+	return t.Issuer
 }
 
 func (t *Ticket) GetType() TicketType {
-	return t.Body.Type
+	return t.Type
 }
 
 func (t *Ticket) GetData() types.Data {
-	return t.Body.Data
+	return t.Data
 }
