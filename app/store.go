@@ -26,10 +26,18 @@ func (s *Store) SetTicket(hash types.Hash, tck *ticket.Ticket) {
 	s.tickets[hash] = tck
 }
 
+func (s *Store) RemoveTicket(hash types.Hash) {
+	delete(s.tickets, hash)
+}
+
 func (s *Store) GetOwnership(hash types.Hash) *ticket.Ownership {
 	return s.ownerships[hash]
 }
 
 func (s *Store) SetOwnership(hash types.Hash, ows *ticket.Ownership) {
 	s.ownerships[hash] = ows
+}
+
+func (s *Store) RemoveOwnership(hash types.Hash) {
+	delete(s.ownerships, hash)
 }

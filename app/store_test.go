@@ -35,11 +35,23 @@ func TestStore(t *testing.T) {
 
 	// store and check dummy tickets
 	sto.SetTicket(tckA.Hash, tckA)
+	assert.Equal(t, 1, len(sto.tickets))
 	tckAToVerify := sto.GetTicket(tckA.Hash)
 	assert.EqualValues(t, tckA, tckAToVerify)
 	sto.SetTicket(tckB.Hash, tckB)
+	assert.Equal(t, 2, len(sto.tickets))
 	tckBToVerify := sto.GetTicket(tckB.Hash)
 	assert.EqualValues(t, tckB, tckBToVerify)
+
+	// remove and check dummy tickets
+	sto.RemoveTicket(tckA.Hash)
+	assert.Equal(t, 1, len(sto.tickets))
+	tckAToVerify = sto.GetTicket(tckA.Hash)
+	assert.Nil(t, tckAToVerify)
+	sto.RemoveTicket(tckB.Hash)
+	assert.Equal(t, 0, len(sto.tickets))
+	tckBToVerify = sto.GetTicket(tckB.Hash)
+	assert.Nil(t, tckBToVerify)
 
 	// generate dummy ownerships
 	owsA, err := ticket.NewOwnership(
@@ -57,9 +69,21 @@ func TestStore(t *testing.T) {
 
 	// store and check dummy ownerships
 	sto.SetOwnership(owsA.Hash, owsA)
+	assert.Equal(t, 1, len(sto.ownerships))
 	owsAToVerify := sto.GetOwnership(owsA.Hash)
 	assert.EqualValues(t, owsA, owsAToVerify)
 	sto.SetOwnership(owsB.Hash, owsB)
+	assert.Equal(t, 2, len(sto.ownerships))
 	owsBToVerify := sto.GetOwnership(owsB.Hash)
 	assert.EqualValues(t, owsB, owsBToVerify)
+
+	// remove and check dummy ownerships
+	sto.RemoveOwnership(owsA.Hash)
+	assert.Equal(t, 1, len(sto.ownerships))
+	owsAToVerify = sto.GetOwnership(owsA.Hash)
+	assert.Nil(t, owsAToVerify)
+	sto.RemoveOwnership(owsB.Hash)
+	assert.Equal(t, 0, len(sto.ownerships))
+	owsBToVerify = sto.GetOwnership(owsB.Hash)
+	assert.Nil(t, owsBToVerify)
 }
