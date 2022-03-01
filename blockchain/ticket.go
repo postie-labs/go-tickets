@@ -6,14 +6,8 @@ import (
 
 	"github.com/postie-labs/go-postie-lib/crypto"
 	"github.com/postie-labs/go-tickets/types"
+	"github.com/postie-labs/go-tickets/types/ticket"
 	"github.com/postie-labs/go-tickets/util"
-)
-
-type TicketType uint8
-
-const (
-	TicketTypeSingleOwner TicketType = iota
-	TicketTypeMultiOwner
 )
 
 type TicketProtocolVersion uint16
@@ -23,29 +17,18 @@ type Ticket struct {
 	ProtocolVersion TicketProtocolVersion `json:"protocol_version"`
 	Signature       Signature             `json:"siguature"`
 
-	Body        TicketBody `json:"body"`
-	encodedBody []byte     `json:"-"`
+	Body        ticket.Ticket `json:"body"`
+	encodedBody []byte        `json:"-"`
 }
 
-type TicketBody struct {
-	Timestamp types.Timestamp `json:"timestamp"`
-	Issuer    crypto.Addr     `json:"issuer"`
-	Type      TicketType      `json:"type"`
-	Data      types.Data      `json:"data"`
-}
-
-func (tb *TicketBody) encode() ([]byte, error) {
-	return json.Marshal(tb)
-}
-
-func NewTicket(protocolVersion TicketProtocolVersion, issuer crypto.Addr, ticketType TicketType, data types.Data) (*Ticket, error) {
-	body := TicketBody{
+func NewTicket(protocolVersion TicketProtocolVersion, issuer crypto.Addr, ticketType ticket.TicketType, data types.Data) (*Ticket, error) {
+	body := ticket.Ticket{
 		Timestamp: types.TimestampNow(),
 		Issuer:    issuer,
 		Type:      ticketType,
 		Data:      data,
 	}
-	encodedBody, err := body.encode()
+	encodedBody, err := body.Encode()
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +48,7 @@ func NewTicketFromBytes(data []byte) (*Ticket, error) {
 	if err != nil {
 		return nil, err
 	}
-	encodedBody, err := ticket.Body.encode()
+	encodedBody, err := ticket.Body.Encode()
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +109,7 @@ func (t *Ticket) GetIssuer() crypto.Addr {
 	return t.Body.Issuer
 }
 
-func (t *Ticket) GetType() TicketType {
+func (t *Ticket) GetType() ticket.TicketType {
 	return t.Body.Type
 }
 

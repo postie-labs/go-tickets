@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/postie-labs/go-postie-lib/crypto"
+	"github.com/postie-labs/go-tickets/types/ticket"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,7 +14,7 @@ func TestTicket(t *testing.T) {
 	issuerPubKey := issuerPrivKey.PubKey()
 	issuerAddr := issuerPubKey.Address()
 
-	ticketA, err := NewTicket(1, issuerAddr, TicketTypeSingleOwner, []byte("hello world"))
+	ticketA, err := NewTicket(1, issuerAddr, ticket.TicketTypeSingleOwner, []byte("hello world"))
 	assert.Nil(t, err)
 
 	err = ticketA.Sign(issuerPrivKey)
