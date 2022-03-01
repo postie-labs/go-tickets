@@ -6,6 +6,7 @@ import (
 
 	"github.com/postie-labs/go-postie-lib/crypto"
 	"github.com/postie-labs/go-tickets/types"
+	"github.com/postie-labs/go-tickets/util"
 )
 
 type OwnershipProtocolVersion uint16
@@ -40,7 +41,7 @@ func NewOwnership(protocolVersion OwnershipProtocolVersion, ticketHash types.Has
 		return nil, err
 	}
 	return &Ownership{
-		Hash:            types.Hash{},
+		Hash:            util.ToSHA256(encodedBody),
 		ProtocolVersion: protocolVersion,
 		Signature:       Signature{},
 
