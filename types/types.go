@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+var (
+	EmptyHash = Hash{}
+)
+
 type (
 	Hash      [32]byte
 	Timestamp = time.Time
