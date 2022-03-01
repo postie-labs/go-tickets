@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/postie-labs/go-postie-lib/crypto"
 	"github.com/postie-labs/go-tickets/types"
@@ -38,18 +39,18 @@ func NewApplication() (*Application, error) {
 // ops
 
 // subject: issuer
-func (app *Application) Issue(privKey *crypto.PrivKey, data []byte) (types.Hash, error) {
+func (app *Application) Issue(issuer *crypto.PrivKey, data []byte) (types.Hash, error) {
 	// generate and sign a new ticket
 	tck, err := ticket.NewTicket(
 		app.ticketProtocolVersion,
-		privKey.PubKey().Address(),
+		issuer.PubKey().Address(),
 		ticket.TicketTypeSingleOwner,
 		data,
 	)
 	if err != nil {
 		return types.EmptyHash, err
 	}
-	err = tck.Sign(privKey)
+	err = tck.Sign(issuer)
 	if err != nil {
 		return types.EmptyHash, err
 	}
@@ -58,12 +59,12 @@ func (app *Application) Issue(privKey *crypto.PrivKey, data []byte) (types.Hash,
 	ows, err := ticket.NewOwnership(
 		app.ownershipProtocolVersion,
 		tck.Hash,
-		privKey.PubKey().Address(),
+		issuer.PubKey().Address(),
 	)
 	if err != nil {
 		return types.EmptyHash, err
 	}
-	err = ows.Sign(privKey)
+	err = ows.Sign(issuer)
 	if err != nil {
 		return types.EmptyHash, err
 	}
@@ -75,8 +76,47 @@ func (app *Application) Issue(privKey *crypto.PrivKey, data []byte) (types.Hash,
 	return ows.Hash, nil
 }
 
-func (app *Application) Transfer() error {
-	return nil
+// subject: owner
+func (app *Application) Transfer(fromOwner, toOwner *crypto.PrivKey, fromOwsHash types.Hash) (types.Hash, error) {
+	fromOwnerAddr := fromOwner.PubKey().Address()
+	fromOws := app.store.GetOwnership(fromOwsHash)
+	if fromOws == nil {
+		return types.EmptyHash, fmt.Errorf("failed to find ownership: %s", fromOwsHash)
+	}
+
+	// verify fromOws
+	ok, err := fromOws.Verify()
+	if err != nil {
+		return types.EmptyHash, err
+	}
+	if !ok {
+		return types.EmptyHash, fmt.Errorf("failed to verify ownership")
+	}
+
+	// check permission
+	if !fromOwnerAddr.Equals(fromOws.GetOwner()) {
+		return types.EmptyHash, fmt.Errorf("owner doesn't match: %s != %s", fromOwner, fromOws.GetOwner())
+	}
+
+	// generate and sign a new owership
+	toOws, err := ticket.NewOwnership(
+		app.ownershipProtocolVersion,
+		fromOws.GetTicketHash(),
+		toOwner.PubKey().Address(),
+	)
+	if err != nil {
+		return types.EmptyHash, err
+	}
+	err = toOws.Sign(toOwner)
+	if err != nil {
+		return types.EmptyHash, err
+	}
+
+	// store
+	app.store.RemoveOwnership(fromOwsHash)
+	app.store.SetOwnership(toOws.Hash, toOws)
+
+	return toOws.Hash, nil
 }
 
 func (app *Application) Verify() error {

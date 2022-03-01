@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"time"
 )
@@ -26,6 +27,14 @@ func (hash *Hash) UnmarshalJSON(data []byte) error {
 	}
 	copy(hash[:], tmp)
 	return nil
+}
+
+func (hash *Hash) IsEmpty() bool {
+	return hash.Equals(EmptyHash)
+}
+
+func (hash *Hash) Equals(target Hash) bool {
+	return bytes.Equal(hash[:], target[:])
 }
 
 func TimestampNow() Timestamp {
