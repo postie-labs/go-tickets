@@ -10,24 +10,26 @@ import (
 
 func TestStore(t *testing.T) {
 	// common
-	issuerPrivKey, err := crypto.GenPrivKey()
+	alice, err := crypto.GenPrivKey()
 	assert.NoError(t, err)
-	ownerPrivKey, err := crypto.GenPrivKey()
+	aliceAddr := alice.PubKey().Address()
+	bob, err := crypto.GenPrivKey()
 	assert.NoError(t, err)
+	bobAddr := bob.PubKey().Address()
 	sto, err := NewStore()
 	assert.NoError(t, err)
 
 	// generate dummy tickets
 	tckA, err := ticket.NewTicket(
 		DefaultTicketProtocolVersion,
-		issuerPrivKey.PubKey().Address(),
+		aliceAddr,
 		ticket.TicketTypeSingleOwner,
 		[]byte("hello world 0"),
 	)
 	assert.NoError(t, err)
 	tckB, err := ticket.NewTicket(
 		DefaultTicketProtocolVersion,
-		issuerPrivKey.PubKey().Address(),
+		bobAddr,
 		ticket.TicketTypeSingleOwner,
 		[]byte("hello world 1"),
 	)
@@ -43,6 +45,32 @@ func TestStore(t *testing.T) {
 	tckBToVerify := sto.GetTicket(tckB.Hash)
 	assert.EqualValues(t, tckB, tckBToVerify)
 
+	// store and check dummy ownerships
+	sto.SetOwnership(tckA.Hash, aliceAddr)
+	assert.Equal(t, 1, len(sto.ownerships))
+	tmpAddr := sto.GetOwnership(tckA.Hash)
+	assert.True(t, tmpAddr.Equals(aliceAddr))
+
+	sto.SetOwnership(tckB.Hash, aliceAddr)
+	assert.Equal(t, 2, len(sto.ownerships))
+	tmpAddr = sto.GetOwnership(tckB.Hash)
+	assert.True(t, tmpAddr.Equals(aliceAddr))
+
+	sto.SetOwnership(tckB.Hash, bobAddr)
+	assert.Equal(t, 2, len(sto.ownerships))
+	tmpAddr = sto.GetOwnership(tckB.Hash)
+	assert.True(t, tmpAddr.Equals(bobAddr))
+
+	// remove and check dummy ownerships
+	sto.RemoveOwnership(tckA.Hash)
+	assert.Equal(t, 1, len(sto.ownerships))
+	tmpAddr = sto.GetOwnership(tckA.Hash)
+	assert.EqualValues(t, tmpAddr, "")
+	sto.RemoveOwnership(tckB.Hash)
+	assert.Equal(t, 0, len(sto.ownerships))
+	tmpAddr = sto.GetOwnership(tckB.Hash)
+	assert.EqualValues(t, tmpAddr, "")
+
 	// remove and check dummy tickets
 	sto.RemoveTicket(tckA.Hash)
 	assert.Equal(t, 1, len(sto.tickets))
@@ -53,37 +81,4 @@ func TestStore(t *testing.T) {
 	tckBToVerify = sto.GetTicket(tckB.Hash)
 	assert.Nil(t, tckBToVerify)
 
-	// generate dummy ownerships
-	owsA, err := ticket.NewOwnership(
-		DefaultOwnershipProtocolVersion,
-		tckA.Hash,
-		ownerPrivKey.PubKey().Address(),
-	)
-	assert.NoError(t, err)
-	owsB, err := ticket.NewOwnership(
-		DefaultOwnershipProtocolVersion,
-		tckB.Hash,
-		ownerPrivKey.PubKey().Address(),
-	)
-	assert.NoError(t, err)
-
-	// store and check dummy ownerships
-	sto.SetOwnership(owsA.Hash, owsA)
-	assert.Equal(t, 1, len(sto.ownerships))
-	owsAToVerify := sto.GetOwnership(owsA.Hash)
-	assert.EqualValues(t, owsA, owsAToVerify)
-	sto.SetOwnership(owsB.Hash, owsB)
-	assert.Equal(t, 2, len(sto.ownerships))
-	owsBToVerify := sto.GetOwnership(owsB.Hash)
-	assert.EqualValues(t, owsB, owsBToVerify)
-
-	// remove and check dummy ownerships
-	sto.RemoveOwnership(owsA.Hash)
-	assert.Equal(t, 1, len(sto.ownerships))
-	owsAToVerify = sto.GetOwnership(owsA.Hash)
-	assert.Nil(t, owsAToVerify)
-	sto.RemoveOwnership(owsB.Hash)
-	assert.Equal(t, 0, len(sto.ownerships))
-	owsBToVerify = sto.GetOwnership(owsB.Hash)
-	assert.Nil(t, owsBToVerify)
 }

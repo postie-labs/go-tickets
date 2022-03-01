@@ -55,68 +55,28 @@ func (app *Application) Issue(issuer *crypto.PrivKey, data []byte) (types.Hash, 
 		return types.EmptyHash, err
 	}
 
-	// generate and sign a new ownership
-	ows, err := ticket.NewOwnership(
-		app.ownershipProtocolVersion,
-		tck.Hash,
-		issuer.PubKey().Address(),
-	)
-	if err != nil {
-		return types.EmptyHash, err
-	}
-	err = ows.Sign(issuer)
-	if err != nil {
-		return types.EmptyHash, err
-	}
-
 	// store
 	app.store.SetTicket(tck.Hash, tck)
-	app.store.SetOwnership(ows.Hash, ows)
+	app.store.SetOwnership(tck.Hash, issuer.PubKey().Address())
 
-	return ows.Hash, nil
+	return tck.Hash, nil
 }
 
 // subject: owner
-func (app *Application) Transfer(fromOwner, toOwner *crypto.PrivKey, fromOwsHash types.Hash) (types.Hash, error) {
-	fromOwnerAddr := fromOwner.PubKey().Address()
-	fromOws := app.store.GetOwnership(fromOwsHash)
-	if fromOws == nil {
-		return types.EmptyHash, fmt.Errorf("failed to find ownership: %s", fromOwsHash)
-	}
-
-	// verify fromOws
-	ok, err := fromOws.Verify()
-	if err != nil {
-		return types.EmptyHash, err
-	}
-	if !ok {
-		return types.EmptyHash, fmt.Errorf("failed to verify ownership")
-	}
-
+func (app *Application) Transfer(from, to crypto.Addr, tckHash types.Hash) error {
 	// check permission
-	if !fromOwnerAddr.Equals(fromOws.GetOwner()) {
-		return types.EmptyHash, fmt.Errorf("owner doesn't match: %s != %s", fromOwner, fromOws.GetOwner())
+	owner := app.store.GetOwnership(tckHash)
+	if owner.Equals("") {
+		return fmt.Errorf("faild to find ownership: %s", tckHash)
 	}
-
-	// generate and sign a new owership
-	toOws, err := ticket.NewOwnership(
-		app.ownershipProtocolVersion,
-		fromOws.GetTicketHash(),
-		toOwner.PubKey().Address(),
-	)
-	if err != nil {
-		return types.EmptyHash, err
-	}
-	err = toOws.Sign(toOwner)
-	if err != nil {
-		return types.EmptyHash, err
+	if !from.Equals(owner) {
+		return fmt.Errorf("failed to match address: %s != %s", from, owner)
 	}
 
 	// store
-	app.store.RemoveOwnership(fromOwsHash)
-	app.store.SetOwnership(toOws.Hash, toOws)
+	app.store.SetOwnership(tckHash, to)
 
-	return toOws.Hash, nil
+	return nil
 }
 
 func (app *Application) Verify() error {

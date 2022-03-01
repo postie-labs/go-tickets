@@ -20,50 +20,23 @@ func TestApplication(t *testing.T) {
 
 	// ISSUE
 	data := []byte("hello world 0")
-	owsAHash, err := app.Issue(alice, data)
+	tckHash, err := app.Issue(alice, data)
 	assert.NoError(t, err)
 
-	owsA := app.store.GetOwnership(owsAHash)
-	assert.NotNil(t, owsA)
+	owner := app.store.GetOwnership(tckHash)
+	assert.True(t, owner.Equals(aliceAddr))
 
-	owsAOwner := owsA.GetOwner()
-	assert.True(t, aliceAddr.Equals(owsAOwner))
+	tck := app.store.GetTicket(tckHash)
+	issuer := tck.GetIssuer()
+	assert.True(t, aliceAddr.Equals(issuer))
 
-	verified, err := owsA.Verify()
-	assert.NoError(t, err)
-	assert.True(t, verified)
-
-	tckAHash := owsA.GetTicketHash()
-	tckA := app.store.GetTicket(tckAHash)
-
-	tckAIssuer := tckA.GetIssuer()
-	assert.True(t, aliceAddr.Equals(tckAIssuer))
-
-	verified, err = tckA.Verify()
-	assert.NoError(t, err)
-	assert.True(t, verified)
-
-	tckAData := tckA.GetData()
-	assert.EqualValues(t, data, tckAData)
+	tckData := tck.GetData()
+	assert.EqualValues(t, data, tckData)
 
 	// TRANSFER
-	owsBHash, err := app.Transfer(alice, bob, owsAHash)
+	err = app.Transfer(aliceAddr, bobAddr, tckHash)
 	assert.NoError(t, err)
 
-	owsA = app.store.GetOwnership(owsAHash)
-	assert.Nil(t, owsA)
-	owsB := app.store.GetOwnership(owsBHash)
-	assert.NotNil(t, owsB)
-
-	owsBOwner := owsB.GetOwner()
-	assert.True(t, bobAddr.Equals(owsBOwner))
-
-	verified, err = owsB.Verify()
-	assert.NoError(t, err)
-	assert.True(t, verified)
-
-	tckBHash := owsB.GetTicketHash()
-	assert.True(t, tckAHash.Equals(tckBHash))
-	tckB := app.store.GetTicket(tckBHash)
-	assert.EqualValues(t, tckA, tckB)
+	owner = app.store.GetOwnership(tckHash)
+	assert.True(t, bobAddr.Equals(owner))
 }
