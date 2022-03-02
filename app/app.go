@@ -33,10 +33,10 @@ func NewApplication() (*Application, error) {
 // ops
 
 // subject: issuer
-func (app *Application) Issue(issuer *crypto.PrivKey, data []byte) (types.Hash, error) {
+func (app *Application) Issue(issuer crypto.Addr, data []byte) (types.Hash, error) {
 	// generate and sign a new ticket
 	tck := ticket.NewTicket(
-		issuer.PubKey().Address(),
+		issuer,
 		ticket.TicketTypeSingleOwner,
 		data,
 	)
@@ -48,7 +48,7 @@ func (app *Application) Issue(issuer *crypto.PrivKey, data []byte) (types.Hash, 
 
 	// store
 	app.store.SetTicket(tckHash, tck)
-	app.store.SetOwnership(tckHash, issuer.PubKey().Address())
+	app.store.SetOwnership(tckHash, issuer)
 
 	return tckHash, nil
 }

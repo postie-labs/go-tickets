@@ -20,7 +20,7 @@ func TestApplication(t *testing.T) {
 
 	// ISSUE
 	data := []byte("hello world 0")
-	tckHash, err := app.Issue(alice, data)
+	tckHash, err := app.Issue(aliceAddr, data)
 	assert.NoError(t, err)
 
 	owner := app.store.GetOwnership(tckHash)
