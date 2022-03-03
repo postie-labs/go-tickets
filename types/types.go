@@ -16,16 +16,30 @@ type (
 	Data      []byte
 )
 
+func NewHashFromString(str string) (Hash, error) {
+	var hash Hash
+	tmp, err := hex.DecodeString(str)
+	if err != nil {
+		return hash, err
+	}
+	copy(hash[:], tmp)
+	return hash, nil
+}
+
+func (hash *Hash) String() string {
+	return hex.EncodeToString(hash[:])
+}
+
 func (hash *Hash) MarshalJSON() ([]byte, error) {
-	return []byte(`"` + hex.EncodeToString(hash[:]) + `"`), nil
+	return []byte(`"` + hash.String() + `"`), nil
 }
 
 func (hash *Hash) UnmarshalJSON(data []byte) error {
-	tmp, err := hex.DecodeString(string(data[1 : len(data)-1]))
+	tmp, err := NewHashFromString(string(data[1 : len(data)-1]))
 	if err != nil {
 		return err
 	}
-	copy(hash[:], tmp)
+	*hash = tmp
 	return nil
 }
 
