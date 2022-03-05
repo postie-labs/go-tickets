@@ -74,7 +74,7 @@ func (app *Application) Transfer(from, to crypto.Addr, tckHash types.Hash) error
 func (app *Application) Verify(owner crypto.Addr, tckHash types.Hash) (bool, error) {
 	realOwner := app.store.GetOwnership(tckHash)
 	if !realOwner.Equals(owner) {
-		return false, fmt.Errorf("failed to match address: %s != %s", realOwner, owner)
+		return false, nil
 	}
 	return true, nil
 }
