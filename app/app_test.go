@@ -42,7 +42,7 @@ func TestApplication(t *testing.T) {
 
 	// VERIFY
 	verified, err := app.Verify(aliceAddr, tckHash)
-	assert.Error(t, err)
+	assert.NoError(t, err)
 	assert.False(t, verified)
 
 	verified, err = app.Verify(bobAddr, tckHash)

@@ -19,6 +19,16 @@ func TestStore(t *testing.T) {
 	sto, err := NewStore()
 	assert.NoError(t, err)
 
+	// airdrop dummy balance
+	amount := sto.GetBalance(aliceAddr)
+	assert.Equal(t, uint32(0), amount)
+	sto.SetBalance(aliceAddr, 100)
+	amount = sto.GetBalance(aliceAddr)
+	assert.Equal(t, uint32(100), amount)
+	sto.SetBalance(aliceAddr, 0)
+	amount = sto.GetBalance(aliceAddr)
+	assert.Equal(t, uint32(0), amount)
+
 	// generate dummy tickets
 	tckA := ticket.NewTicket(
 		aliceAddr,
