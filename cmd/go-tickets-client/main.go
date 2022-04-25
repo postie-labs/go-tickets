@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/postie-labs/go-postie-lib/crypto"
-	pb "github.com/postie-labs/go-postie-proto/tickets"
+	pb "github.com/postie-labs/proto/tickets"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

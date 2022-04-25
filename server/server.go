@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/postie-labs/go-postie-lib/crypto"
-	pb "github.com/postie-labs/go-postie-proto/tickets"
 	tickets "github.com/postie-labs/go-tickets/app"
 	"github.com/postie-labs/go-tickets/types"
+	pb "github.com/postie-labs/proto/tickets"
 )
 
 type BilletterieServer struct {

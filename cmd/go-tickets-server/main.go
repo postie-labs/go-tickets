@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net"
 
-	pb "github.com/postie-labs/go-postie-proto/tickets"
 	tickets "github.com/postie-labs/go-tickets/app"
 	"github.com/postie-labs/go-tickets/server"
+	pb "github.com/postie-labs/proto/tickets"
 	"google.golang.org/grpc"
 )
 

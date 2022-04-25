@@ -4,8 +4,9 @@ go 1.17
 
 require (
 	github.com/postie-labs/go-postie-lib v0.0.0-20220227235013-99c8cd331c17
-	github.com/postie-labs/go-postie-proto v0.0.1
+	github.com/postie-labs/proto v0.0.2
 	github.com/stretchr/testify v1.7.0
+	google.golang.org/grpc v1.44.0
 )
 
 require (
@@ -35,7 +36,6 @@ require (
 	golang.org/x/sys v0.0.0-20210816183151-1e6c022a8912 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
-	google.golang.org/grpc v1.44.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
