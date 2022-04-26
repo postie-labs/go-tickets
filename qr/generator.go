@@ -1,4 +1,4 @@
-package main
+package qr
 
 import (
 	"fmt"
@@ -9,11 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-const (
-	DefaultQRCodeFilename = "qr-code.png"
-)
-
-func GenerateQRCode(owner, tokenId string, privKey crypto.PrivKey) (*qr.Code, error) {
+func Generate(owner, tokenId string, privKey crypto.PrivKey) (*qr.Code, error) {
 	data := &qr.Data{
 		Owner:   owner,
 		TokenId: tokenId,
@@ -36,14 +32,14 @@ func GenerateQRCode(owner, tokenId string, privKey crypto.PrivKey) (*qr.Code, er
 	}, nil
 }
 
-func PrintQRCode(code *qr.Code) error {
+func Write(code *qr.Code, filename string) error {
 	codeStr := code.String()
 	qc, err := qrcode.New(codeStr, qrcode.Medium)
 	if err != nil {
 		return err
 	}
 	fmt.Printf("len:%d\ndata:%s\n%s", len(codeStr), codeStr, qc.ToSmallString(false))
-	err = qc.WriteFile(256, DefaultQRCodeFilename)
+	err = qc.WriteFile(256, filename)
 	if err != nil {
 		return err
 	}
