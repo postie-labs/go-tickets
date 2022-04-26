@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/golang/protobuf/proto"
 	"github.com/postie-labs/proto/qr"
+	"github.com/skip2/go-qrcode"
 	"github.com/tendermint/tendermint/crypto"
 )
 
@@ -29,6 +32,12 @@ func GenerateQRCode(owner, tokenId string, privKey crypto.PrivKey) (*qr.Code, er
 	}, nil
 }
 
-func PrintQRCode(code *qr.Code) {
-
+func PrintQRCode(code *qr.Code) error {
+	codeStr := code.String()
+	qc, err := qrcode.New(codeStr, qrcode.Medium)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("len:%d\ndata:%s\n%s", len(codeStr), codeStr, qc.ToSmallString(false))
+	return nil
 }

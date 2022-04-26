@@ -6,6 +6,7 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/postie-labs/go-postie-lib v0.0.1
 	github.com/postie-labs/proto v0.0.2
+	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/stretchr/testify v1.7.1
 	github.com/tendermint/tendermint v0.33.7
 	github.com/terra-project/terra.go v1.0.0

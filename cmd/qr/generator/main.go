@@ -23,5 +23,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	PrintQRCode(qrCode)
+	err = PrintQRCode(qrCode)
+	if err != nil {
+		panic(err)
+	}
 }
