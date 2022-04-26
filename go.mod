@@ -3,7 +3,6 @@ module github.com/postie-labs/go-tickets
 go 1.17
 
 require (
-	github.com/golang/protobuf v1.5.2
 	github.com/postie-labs/go-postie-lib v0.0.1
 	github.com/postie-labs/proto v0.0.3
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
@@ -11,6 +10,7 @@ require (
 	github.com/tendermint/tendermint v0.33.7
 	github.com/terra-project/terra.go v1.0.0
 	google.golang.org/grpc v1.46.0
+	google.golang.org/protobuf v1.27.1
 )
 
 require (
@@ -34,6 +34,7 @@ require (
 	github.com/go-logfmt/logfmt v0.5.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/btree v1.0.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
@@ -94,7 +95,6 @@ require (
 	golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
-	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.51.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect

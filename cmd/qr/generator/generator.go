@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/postie-labs/proto/qr"
 	"github.com/skip2/go-qrcode"
 	"github.com/tendermint/tendermint/crypto"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
