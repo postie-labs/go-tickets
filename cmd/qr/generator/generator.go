@@ -9,6 +9,10 @@ import (
 	"github.com/tendermint/tendermint/crypto"
 )
 
+const (
+	DefaultQRCodeFilename = "qr-code.png"
+)
+
 func GenerateQRCode(owner, tokenId string, privKey crypto.PrivKey) (*qr.Code, error) {
 	data := &qr.Data{
 		Owner:   owner,
@@ -24,7 +28,7 @@ func GenerateQRCode(owner, tokenId string, privKey crypto.PrivKey) (*qr.Code, er
 	}
 	signature := &qr.Signature{
 		SigBytes:  sigBytes,
-		PublicKey: string(privKey.PubKey().Bytes()),
+		PublicKey: privKey.PubKey().Bytes(),
 	}
 	return &qr.Code{
 		Data:      data,
@@ -39,5 +43,9 @@ func PrintQRCode(code *qr.Code) error {
 		return err
 	}
 	fmt.Printf("len:%d\ndata:%s\n%s", len(codeStr), codeStr, qc.ToSmallString(false))
+	err = qc.WriteFile(256, DefaultQRCodeFilename)
+	if err != nil {
+		return err
+	}
 	return nil
 }
