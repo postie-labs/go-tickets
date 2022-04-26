@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/postie-labs/go-tickets/qr"
-	"github.com/terra-project/terra.go/key"
+	"github.com/terra-money/terra.go/key"
 )
 
 const (
@@ -16,11 +16,11 @@ const (
 )
 
 func main() {
-	privKeyBytes, err := key.DerivePrivKey(Mnemonic, key.CreateHDPath(0, 0))
+	privKeyBytes, err := key.DerivePrivKeyBz(Mnemonic, key.CreateHDPath(0, 0))
 	if err != nil {
 		panic(err)
 	}
-	privKey, err := key.StdPrivKeyGen(privKeyBytes)
+	privKey, err := key.PrivKeyGen(privKeyBytes)
 	if err != nil {
 		panic(err)
 	}

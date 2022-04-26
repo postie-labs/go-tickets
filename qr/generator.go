@@ -3,13 +3,13 @@ package qr
 import (
 	"fmt"
 
+	"github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/postie-labs/proto/qr"
 	"github.com/skip2/go-qrcode"
-	"github.com/tendermint/tendermint/crypto"
 	"google.golang.org/protobuf/proto"
 )
 
-func Generate(owner, tokenId string, privKey crypto.PrivKey) (*qr.Code, error) {
+func Generate(owner, tokenId string, privKey types.PrivKey) (*qr.Code, error) {
 	data := &qr.Data{
 		Owner:   owner,
 		TokenId: tokenId,
