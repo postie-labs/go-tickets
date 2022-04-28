@@ -1,6 +1,7 @@
 package qr
 
 import (
+	"encoding/base64"
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/crypto/types"
@@ -33,12 +34,16 @@ func Generate(owner, tokenId string, privKey types.PrivKey) (*qr.Code, error) {
 }
 
 func Write(code *qr.Code, filename string) error {
-	codeStr := code.String()
-	qc, err := qrcode.New(codeStr, qrcode.Medium)
+	dataBytes, err := proto.Marshal(code)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("len:%d\ndata:%s\n%s", len(codeStr), codeStr, qc.ToSmallString(false))
+	dataStr := base64.StdEncoding.EncodeToString(dataBytes)
+	qc, err := qrcode.New(dataStr, qrcode.Medium)
+	if err != nil {
+		return err
+	}
+	fmt.Println(dataStr)
 	err = qc.WriteFile(256, filename)
 	if err != nil {
 		return err
