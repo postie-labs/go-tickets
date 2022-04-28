@@ -5,6 +5,8 @@ import (
 	"image"
 	"os"
 
+	"github.com/makiuchi-d/gozxing"
+	"github.com/makiuchi-d/gozxing/qrcode"
 	"github.com/postie-labs/proto/qr"
 )
 
@@ -20,7 +22,18 @@ func Read(filename string) (*qr.Code, error) {
 		return nil, err
 	}
 
-	fmt.Printf("%s\n", img)
+	bmp, err := gozxing.NewBinaryBitmapFromImage(img)
+	if err != nil {
+		return nil, err
+	}
+
+	reader := qrcode.NewQRCodeReader()
+	result, err := reader.DecodeWithoutHints(bmp)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("%s\n", result)
 
 	return nil, nil
 }
