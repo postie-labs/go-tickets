@@ -49,7 +49,11 @@ func Write(code *qr.Code, filename string) error {
 
 	// encode base64-formatted data string to qr code image
 	writer := qrcode.NewQRCodeWriter()
-	img, err := writer.EncodeWithoutHint(dataStr, gozxing.BarcodeFormat_QR_CODE, 512, 512)
+	encodeOpt := map[gozxing.EncodeHintType]interface{}{
+		gozxing.EncodeHintType_ERROR_CORRECTION: "M",
+		gozxing.EncodeHintType_MARGIN:           0,
+	}
+	img, err := writer.Encode(dataStr, gozxing.BarcodeFormat_QR_CODE, 512, 512, encodeOpt)
 	if err != nil {
 		return err
 	}
