@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/postie-labs/go-tickets/qr"
 	"github.com/terra-money/terra.go/key"
@@ -24,7 +22,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(types.AccAddress(privKey.PubKey().Address()).String())
 	qrCode, err := qr.Generate(Owner, TokenId, privKey)
 	if err != nil {
 		panic(err)

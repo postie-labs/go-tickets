@@ -7,7 +7,6 @@ require (
 	github.com/makiuchi-d/gozxing v0.1.1
 	github.com/postie-labs/go-postie-lib v0.0.1
 	github.com/postie-labs/proto v0.0.3
-	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/stretchr/testify v1.7.1
 	github.com/terra-money/terra.go v1.0.1-0.20211220063124-386f2075291e
 	google.golang.org/grpc v1.46.0
