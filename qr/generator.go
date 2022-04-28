@@ -13,10 +13,11 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func Generate(owner, tokenId string, privKey types.PrivKey) (*qr.Code, error) {
+func Generate(contractAddress, owner, tokenId string, privKey types.PrivKey) (*qr.Code, error) {
 	data := &qr.Data{
-		Owner:   owner,
-		TokenId: tokenId,
+		ContractAddress: contractAddress,
+		Owner:           owner,
+		TokenId:         tokenId,
 	}
 	dataBytes, err := proto.Marshal(data)
 	if err != nil {

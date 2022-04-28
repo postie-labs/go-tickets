@@ -8,6 +8,7 @@ import (
 
 const (
 	Mnemonic              = "this tiny rifle pelican board chalk adult voice imitate green daring visa grab amateur good finish yard note meat pink suit saddle catch alarm"
+	ContractAddress       = "terra1al87aagg7asjyceu9x8f4xj554ddzlk9q2t8ls"
 	Owner                 = "terra1jrj9kjwv5pwrttrsdmg33w0kzj3szzc230g9z5"
 	TokenId               = "this is the first token issued by alice+bob"
 	DefaultQRCodeFilename = "qr-code.png"
@@ -22,7 +23,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	qrCode, err := qr.Generate(Owner, TokenId, privKey)
+	qrCode, err := qr.Generate(ContractAddress, Owner, TokenId, privKey)
 	if err != nil {
 		panic(err)
 	}

@@ -6,7 +6,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.44.5
 	github.com/makiuchi-d/gozxing v0.1.1
 	github.com/postie-labs/go-postie-lib v0.0.1
-	github.com/postie-labs/proto v0.0.3
+	github.com/postie-labs/proto v0.0.4
 	github.com/stretchr/testify v1.7.1
 	github.com/terra-money/terra.go v1.0.1-0.20211220063124-386f2075291e
 	google.golang.org/grpc v1.46.0
