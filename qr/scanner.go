@@ -58,10 +58,19 @@ func Scan(code *qr.Code) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	fmt.Printf("%s\n", data)
+	var respAllNftInfo ResponseAllNftInfo
+	err = json.Unmarshal(data, &respAllNftInfo)
+	if err != nil {
+		return false, nil
+	}
 
 	// 3. check ownership
+	if code.Data.Owner != respAllNftInfo.Owner {
+		return false, nil
+	}
+
 	// 4. check validity with not_valid_before, not_valid_after
+
 	// 5. check attributes (optional)
 	return true, nil
 }

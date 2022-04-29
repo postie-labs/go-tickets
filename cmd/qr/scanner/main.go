@@ -1,6 +1,10 @@
 package main
 
-import "github.com/postie-labs/go-tickets/qr"
+import (
+	"fmt"
+
+	"github.com/postie-labs/go-tickets/qr"
+)
 
 const (
 	DefaultQRCodeFilename = "qr-code.png"
@@ -12,8 +16,10 @@ func main() {
 		panic(err)
 	}
 
-	_, err = qr.Scan(code)
+	ok, err := qr.Scan(code)
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println(ok)
 }
