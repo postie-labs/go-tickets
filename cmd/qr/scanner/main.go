@@ -7,7 +7,12 @@ const (
 )
 
 func main() {
-	_, err := qr.Read(DefaultQRCodeFilename)
+	code, err := qr.Read(DefaultQRCodeFilename)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = qr.Scan(code)
 	if err != nil {
 		panic(err)
 	}
