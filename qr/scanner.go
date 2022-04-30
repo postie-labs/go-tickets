@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/makiuchi-d/gozxing"
 	"github.com/makiuchi-d/gozxing/qrcode"
 	"github.com/postie-labs/proto/qr"
@@ -33,6 +34,9 @@ func Scan(code *qr.Code) (bool, error) {
 	}
 	if !pubKey.VerifySignature(dataBytes, code.Signature.SigBytes) {
 		return false, fmt.Errorf("failed to verify signature")
+	}
+	if types.AccAddress(pubKey.Address()).String() != code.Data.Owner {
+		return false, fmt.Errorf("failed to verify owner address")
 	}
 
 	// 2. get ticket metadata

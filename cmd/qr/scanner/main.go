@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/postie-labs/go-tickets/qr"
 )
 
@@ -22,4 +23,10 @@ func main() {
 	}
 
 	fmt.Println(ok)
+}
+
+func init() {
+	config := types.GetConfig()
+	config.SetBech32PrefixForAccount("terra", "terrapub")
+	config.Seal()
 }
