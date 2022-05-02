@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	"github.com/cosmos/cosmos-sdk/types"
@@ -65,17 +66,24 @@ func Scan(code *qr.Code) (bool, error) {
 	var respAllNftInfo ResponseAllNftInfo
 	err = json.Unmarshal(data, &respAllNftInfo)
 	if err != nil {
-		return false, nil
+		return false, err
 	}
 
 	// 3. check ownership
 	if code.Data.Owner != respAllNftInfo.Owner {
-		return false, nil
+		return false, fmt.Errorf("failed to verify ownership")
 	}
 
 	// 4. check validity with not_valid_before, not_valid_after
+	now := time.Now().Unix()
+	notValidBefore := respAllNftInfo.NotValidBefore
+	notValidAfter := respAllNftInfo.NotValidAfter
+	if !(notValidBefore <= now && now <= notValidAfter) {
+		return false, fmt.Errorf("failed to verify validity")
+	}
 
-	// 5. check attributes (optional)
+	// TODO: 5. check attributes (optional)
+
 	return true, nil
 }
 
