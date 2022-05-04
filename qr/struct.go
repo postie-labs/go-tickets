@@ -33,3 +33,13 @@ type Attribute struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
 }
+
+type TxExecuteMint struct {
+	Mint `json:"mint"`
+}
+type Mint struct {
+	Owner     string    `json:"owner"`
+	TokenId   string    `json:"token_id"`
+	TokenUri  string    `json:"token_uri"`
+	Extension Extension `json:"extension"`
+}
