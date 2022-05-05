@@ -14,6 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/makiuchi-d/gozxing"
 	"github.com/makiuchi-d/gozxing/qrcode"
+	"github.com/postie-labs/go-tickets/types/msgs"
 	"github.com/postie-labs/proto/qr"
 	"google.golang.org/protobuf/proto"
 )
@@ -41,7 +42,7 @@ func Scan(code *qr.Code) (bool, error) {
 	}
 
 	// 2. get ticket metadata
-	query := QueryAllNftInfo{AllNftInfo{TokenId: code.Data.TokenId}}
+	query := msgs.QueryAllNftInfo{msgs.AllNftInfo{TokenId: code.Data.TokenId}}
 	queryBytes, err := json.Marshal(query)
 	if err != nil {
 		return false, err
@@ -63,7 +64,7 @@ func Scan(code *qr.Code) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	var respAllNftInfo ResponseAllNftInfo
+	var respAllNftInfo msgs.ResponseAllNftInfo
 	err = json.Unmarshal(data, &respAllNftInfo)
 	if err != nil {
 		return false, err
