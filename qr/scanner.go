@@ -14,7 +14,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/makiuchi-d/gozxing"
 	"github.com/makiuchi-d/gozxing/qrcode"
-	"github.com/postie-labs/go-tickets/types/msgs"
 	"github.com/postie-labs/proto/qr"
 	pb "github.com/postie-labs/proto/tickets"
 	"google.golang.org/protobuf/proto"
@@ -43,7 +42,7 @@ func Scan(code *qr.Code) (bool, error) {
 	}
 
 	// 2. get ticket metadata
-	query := pb.QueryAllInfo{AllNftInfo: &pb.AllInfo{TokenId: code.Data.TokenId}}
+	query := pb.QueryAllInfo{AllNftInfo: &pb.QueryAllInfo_AllInfo{TokenId: code.Data.TokenId}}
 	queryBytes, err := json.Marshal(query)
 	if err != nil {
 		return false, err
@@ -65,21 +64,21 @@ func Scan(code *qr.Code) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	var respAllNftInfo msgs.ResponseAllNftInfo
-	err = json.Unmarshal(data, &respAllNftInfo)
+	var queryResp pb.QueryAllInfoResponse
+	err = json.Unmarshal(data, &queryResp)
 	if err != nil {
 		return false, err
 	}
 
 	// 3. check ownership
-	if code.Data.Owner != respAllNftInfo.Owner {
+	if code.Data.Owner != queryResp.QueryResult.Access.Owner {
 		return false, fmt.Errorf("failed to verify ownership")
 	}
 
 	// 4. check validity with not_valid_before, not_valid_after
 	now := time.Now().Unix()
-	notValidBefore := respAllNftInfo.NotValidBefore
-	notValidAfter := respAllNftInfo.NotValidAfter
+	notValidBefore := queryResp.QueryResult.Info.Extension.NotValidBefore
+	notValidAfter := queryResp.QueryResult.Info.Extension.NotValidAfter
 	if !(notValidBefore <= now && now <= notValidAfter) {
 		return false, fmt.Errorf("failed to verify validity")
 	}
