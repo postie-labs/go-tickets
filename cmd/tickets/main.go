@@ -103,6 +103,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	execMsgSize := len(execMsgBytes)
+	fmt.Println("size:", execMsgSize)
+	if execMsgSize > 4096 {
+		panic(fmt.Errorf("exec_msg_size(%d) exceeds max_contract_msg_size(%d)", execMsgSize, 4096))
+	}
 	txOpts := client.CreateTxOptions{
 		Msgs: []msg.Msg{
 			msg.NewMsgExecuteContract(
@@ -119,11 +124,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	txBytes, err := tx.GetTxBytes()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("size:", len(txBytes))
 
 	// broadcast transaction
 	respBroadcast, err := LCDClient.Broadcast(ctx, tx)
