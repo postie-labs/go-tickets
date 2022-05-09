@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -18,19 +19,22 @@ import (
 )
 
 const (
-	Mnemonic               = "term wait vessel monitor rack oak found athlete lens mimic grow magnet spatial frown budget balance rebuild fossil acid vicious tiger avocado brand venture"
-	LCDEndpoint            = "https://bombay-lcd.terra.dev"
-	ChainID                = "bombay-12"
-	ContractAddressBench32 = "terra1al87aagg7asjyceu9x8f4xj554ddzlk9q2t8ls"
-	Owner                  = "terra1k05lru8us3ctq7ngc396sxesmd7dsd2a8ppfv7"
+	DefaultLCDEndpoint            = "https://bombay-lcd.terra.dev"
+	DefaultChainID                = "bombay-12"
+	DefaultContractAddressBench32 = "terra1al87aagg7asjyceu9x8f4xj554ddzlk9q2t8ls"
+	DefaultOwnerBench32           = "terra1k05lru8us3ctq7ngc396sxesmd7dsd2a8ppfv7"
 )
 
 func main() {
 	// init
 	ctx := context.Background()
+	mnemonic := os.Getenv("MNEMONIC")
+	if mnemonic == "" {
+		panic(fmt.Errorf("failed to read MNEMONIC envrionment variable"))
+	}
 
 	// generate privKey, pubKey, address
-	privKeyBytes, err := key.DerivePrivKeyBz(Mnemonic, key.CreateHDPath(0, 0))
+	privKeyBytes, err := key.DerivePrivKeyBz(mnemonic, key.CreateHDPath(0, 0))
 	if err != nil {
 		panic(err)
 	}
@@ -43,8 +47,8 @@ func main() {
 
 	// create LCDClient
 	LCDClient := client.NewLCDClient(
-		LCDEndpoint,
-		ChainID,
+		DefaultLCDEndpoint,
+		DefaultChainID,
 		cosmtypes.NewDecCoinFromDec("uluna", cosmtypes.NewDecFromIntWithPrec(cosmtypes.NewInt(1133), 5)),
 		cosmtypes.NewDecFromIntWithPrec(cosmtypes.NewInt(150), 2),
 		privKey,
@@ -52,7 +56,7 @@ func main() {
 	)
 
 	// create transaction
-	contractAddress, err := cosmtypes.AccAddressFromBech32(ContractAddressBench32)
+	contractAddress, err := cosmtypes.AccAddressFromBech32(DefaultContractAddressBench32)
 	if err != nil {
 		panic(err)
 	}
@@ -93,7 +97,7 @@ func main() {
 
 	execMsg := msgs.TxExecuteMint{
 		Mint: msgs.Mint{
-			Owner:     Owner,
+			Owner:     DefaultOwnerBench32,
 			TokenId:   tokenIdStr,
 			TokenUri:  "",
 			Extension: extension,
