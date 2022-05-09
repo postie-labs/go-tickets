@@ -11,8 +11,7 @@ import (
 	"time"
 
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/postie-labs/go-tickets/types"
-	"github.com/postie-labs/go-tickets/types/msgs"
+	pb "github.com/postie-labs/proto/tickets"
 	"github.com/terra-money/terra.go/client"
 	"github.com/terra-money/terra.go/key"
 	"github.com/terra-money/terra.go/msg"
@@ -62,10 +61,10 @@ func main() {
 	}
 
 	now := time.Now()
-	extension := types.Extension{
+	extension := pb.Extension{
 		NotValidBefore: now.Unix(),
 		NotValidAfter:  now.Add(time.Hour * 3600).Unix(),
-		Attributes: []types.Attribute{
+		Attributes: []*pb.Attribute{
 			{
 				Key:   "name",
 				Value: "wedding invitation card",
@@ -95,12 +94,12 @@ func main() {
 	tokenIdBytes := sha256.Sum256(extensionBytes)
 	tokenIdStr := strings.ToUpper(hex.EncodeToString(tokenIdBytes[:]))
 
-	execMsg := msgs.TxExecuteMint{
-		Mint: msgs.Mint{
+	execMsg := pb.TxMint{
+		Mint: &pb.Mint{
 			Owner:     DefaultOwnerBench32,
 			TokenId:   tokenIdStr,
 			TokenUri:  "",
-			Extension: extension,
+			Extension: &extension,
 		},
 	}
 	execMsgBytes, err := json.Marshal(execMsg)

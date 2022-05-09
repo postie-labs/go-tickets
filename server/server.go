@@ -6,7 +6,7 @@ import (
 	"github.com/postie-labs/go-postie-lib/crypto"
 	tickets "github.com/postie-labs/go-tickets/app"
 	"github.com/postie-labs/go-tickets/types"
-	pb "github.com/postie-labs/proto/tickets"
+	pb "github.com/postie-labs/proto/billetterie"
 )
 
 type BilletterieServer struct {

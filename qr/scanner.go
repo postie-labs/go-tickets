@@ -16,6 +16,7 @@ import (
 	"github.com/makiuchi-d/gozxing/qrcode"
 	"github.com/postie-labs/go-tickets/types/msgs"
 	"github.com/postie-labs/proto/qr"
+	pb "github.com/postie-labs/proto/tickets"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -42,7 +43,7 @@ func Scan(code *qr.Code) (bool, error) {
 	}
 
 	// 2. get ticket metadata
-	query := msgs.QueryAllNftInfo{msgs.AllNftInfo{TokenId: code.Data.TokenId}}
+	query := pb.QueryAllInfo{AllNftInfo: &pb.AllInfo{TokenId: code.Data.TokenId}}
 	queryBytes, err := json.Marshal(query)
 	if err != nil {
 		return false, err

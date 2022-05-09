@@ -6,7 +6,7 @@ import (
 
 	tickets "github.com/postie-labs/go-tickets/app"
 	"github.com/postie-labs/go-tickets/server"
-	pb "github.com/postie-labs/proto/tickets"
+	pb "github.com/postie-labs/proto/billetterie"
 	"google.golang.org/grpc"
 )
 
