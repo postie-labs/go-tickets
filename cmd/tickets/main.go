@@ -11,6 +11,7 @@ import (
 	"time"
 
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/postie-labs/go-tickets/cli"
 	pb "github.com/postie-labs/proto/tickets"
 	"github.com/terra-money/terra.go/client"
 	"github.com/terra-money/terra.go/key"
@@ -25,6 +26,14 @@ const (
 )
 
 func main() {
+	err := cli.RootCmd.Execute()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func gen() {
 	// init
 	ctx := context.Background()
 	mnemonic := os.Getenv("MNEMONIC")
