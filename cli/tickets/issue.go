@@ -14,13 +14,7 @@ var IssueCmd = &cobra.Command{
 		// prepare
 		pubKey := LCDClient.PrivKey.PubKey()
 		address := cosmtypes.AccAddress(pubKey.Address())
-		fmt.Println(address)
+		fmt.Println(address.String())
 		return nil
 	},
-}
-
-func init() {
-	config := cosmtypes.NewConfig()
-	config.SetBech32PrefixForAccount("terra", "terrapub")
-	config.Seal()
 }

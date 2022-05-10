@@ -21,6 +21,10 @@ var (
 
 func init() {
 	cobra.OnInitialize(InitClient)
+
+	config := cosmtypes.NewConfig()
+	config.SetBech32PrefixForAccount("terra", "terrapub")
+	config.Seal()
 }
 
 func InitClient() {
