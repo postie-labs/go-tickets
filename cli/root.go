@@ -20,6 +20,8 @@ func init() {
 	RootCmd.AddCommand(
 		tickets.IssueCmd,
 		tickets.TransferCmd,
-		tickets.InfoCmd,
+		tickets.ListCmd,
+		tickets.GetCmd,
+		tickets.QRCmd,
 	)
 }
