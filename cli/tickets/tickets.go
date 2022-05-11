@@ -13,10 +13,11 @@ import (
 )
 
 var (
-	LCDClient   *client.LCDClient
-	LCDEndpoint *string
-	ChainID     *string
-	Timeout     *int64
+	LCDClient    *client.LCDClient
+	LCDEndpoint  *string
+	ChainID      *string
+	Timeout      *int64
+	ContractAddr *cosmtypes.AccAddress
 )
 
 func init() {
