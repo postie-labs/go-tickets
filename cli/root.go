@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	DefaultLCDEndpoint         = "https://bombay-lcd.terra.dev"
-	DefaultChainID             = "bombay-12"
-	DefaultTimeout             = 10 // sec
-	DefaultContractAddrBench32 = "terra1al87aagg7asjyceu9x8f4xj554ddzlk9q2t8ls"
+	DefaultLCDEndpoint        = "https://bombay-lcd.terra.dev"
+	DefaultChainID            = "bombay-12"
+	DefaultTimeout            = 10 // sec
+	DefaultContractAddrBech32 = "terra1al87aagg7asjyceu9x8f4xj554ddzlk9q2t8ls"
 )
 
 var RootCmd = &cobra.Command{
@@ -29,9 +29,9 @@ func init() {
 	tickets.LCDEndpoint = RootCmd.PersistentFlags().String("endpoint", DefaultLCDEndpoint, "LCDEndpoint")
 	tickets.ChainID = RootCmd.PersistentFlags().String("chain-id", DefaultChainID, "Chain ID")
 	tickets.Timeout = RootCmd.PersistentFlags().Int64("timeout", DefaultTimeout, "Timeout")
-	contractAddrBench32 := RootCmd.PersistentFlags().String("contract", DefaultContractAddrBench32, "Bench32-formatted Contract Address")
+	contractAddrBech32 := RootCmd.PersistentFlags().String("contract", DefaultContractAddrBech32, "Bech32-formatted Contract Address")
 
-	contractAddr, err := cosmtypes.AccAddressFromBech32(*contractAddrBench32)
+	contractAddr, err := cosmtypes.AccAddressFromBech32(*contractAddrBech32)
 	if err != nil {
 		util.HandleError(err)
 	}
