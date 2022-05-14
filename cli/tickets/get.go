@@ -44,7 +44,26 @@ var GetCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Printf("%s\n", data)
+		queryResult := queryResp.GetQueryResult()
+		access := queryResult.GetAccess()
+		info := queryResult.GetInfo()
+		extension := info.GetExtension()
+		attributes := extension.GetAttributes()
+		fmt.Println("owner:", access.Owner)
+		if len(access.Approvals) > 0 {
+			fmt.Println("approvals:", access.Approvals)
+			for _, approval := range access.Approvals {
+				fmt.Printf("  - %s\n", approval)
+			}
+		}
+		fmt.Println("not valid before:", extension.NotValidBefore)
+		fmt.Println("not valid after:", extension.NotValidAfter)
+		if len(attributes) > 0 {
+			fmt.Println("attributes:")
+			for _, attribute := range attributes {
+				fmt.Printf("  - %s: %s\n", attribute.GetKey(), attribute.GetValue())
+			}
+		}
 		return nil
 	},
 }
